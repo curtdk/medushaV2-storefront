@@ -1,8 +1,9 @@
 import { listProducts } from "@lib/data/products"
 import { HttpTypes } from "@medusajs/types"
-import { Text } from "@medusajs/ui"
+import { Heading, Text } from "@medusajs/ui"
+import { ArrowRight } from "@medusajs/icons"
+import Link from "next/link"
 
-import InteractiveLink from "@modules/common/components/interactive-link"
 import ProductPreview from "@modules/products/components/product-preview"
 
 export default async function ProductRail({
@@ -19,29 +20,54 @@ export default async function ProductRail({
     queryParams: {
       collection_id: collection.id,
       fields: "*variants.calculated_price",
+      limit: 8,
     },
   })
 
-  if (!pricedProducts) {
+  if (!pricedProducts || pricedProducts.length === 0) {
     return null
   }
 
   return (
-    <div className="content-container py-12 small:py-24">
-      <div className="flex justify-between mb-8">
-        <Text className="txt-xlarge">{collection.title}</Text>
-        <InteractiveLink href={`/collections/${collection.handle}`}>
-          View all
-        </InteractiveLink>
+    <div className="content-container py-12 small:py-20">
+      {/* Section Header */}
+      <div className="mb-10 flex items-end justify-between">
+        <div>
+          <Text className="mb-2 text-sm font-medium uppercase tracking-wider text-neutral-500">
+            Featured Collection
+          </Text>
+          <Heading level="h2" className="text-3xl font-bold text-neutral-900">
+            {collection.title}
+          </Heading>
+        </div>
+        <Link
+          href={`/collections/${collection.handle}`}
+          className="group hidden items-center gap-2 font-medium text-neutral-900 transition-colors hover:text-neutral-600 small:flex"
+        >
+          View All
+          <ArrowRight className="transition-transform group-hover:translate-x-1" />
+        </Link>
       </div>
-      <ul className="grid grid-cols-2 small:grid-cols-3 gap-x-6 gap-y-24 small:gap-y-36">
-        {pricedProducts &&
-          pricedProducts.map((product) => (
-            <li key={product.id}>
-              <ProductPreview product={product} region={region} isFeatured />
-            </li>
-          ))}
+
+      {/* Products Grid */}
+      <ul className="grid grid-cols-2 gap-4 small:grid-cols-3 small:gap-6 medium:grid-cols-4">
+        {pricedProducts.map((product) => (
+          <li key={product.id} className="group">
+            <ProductPreview product={product} region={region} isFeatured />
+          </li>
+        ))}
       </ul>
+
+      {/* Mobile View All Link */}
+      <div className="mt-8 text-center small:hidden">
+        <Link
+          href={`/collections/${collection.handle}`}
+          className="inline-flex items-center gap-2 font-medium text-neutral-900 transition-colors hover:text-neutral-600"
+        >
+          View All Products
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
     </div>
   )
 }
