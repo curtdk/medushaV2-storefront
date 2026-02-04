@@ -7,6 +7,7 @@ import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
+import SearchBox from "@modules/layout/components/search-box"
 
 export default async function Nav() {
   const [regions, locales, currentLocale] = await Promise.all([
@@ -17,8 +18,8 @@ export default async function Nav() {
 
   return (
     <div className="sticky top-0 inset-x-0 z-50 group">
-      <header className="relative h-16 mx-auto border-b duration-200 bg-white border-ui-border-base">
-        <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
+      <header className="relative mx-auto border-b duration-200 bg-white border-ui-border-base">
+        <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-16 text-small-regular">
           <div className="flex-1 basis-0 h-full flex items-center">
             <div className="h-full">
               <SideMenu regions={regions} locales={locales} currentLocale={currentLocale} />
@@ -60,6 +61,11 @@ export default async function Nav() {
             </Suspense>
           </div>
         </nav>
+        
+        {/* Search Bar */}
+        <div className="content-container py-3 border-t border-ui-border-base">
+          <SearchBox />
+        </div>
       </header>
     </div>
   )
